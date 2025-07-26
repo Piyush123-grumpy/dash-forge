@@ -1,13 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
-import sidebarReducer from "./slicers/sidebar.slicer";
+// import sidebarReducer from "./slicer/sidebar.slicer";
 import authReducer from "./slicers/auth.slicer";
-import googleReducer from "./slicers/googlemap.slicer";
 import thunk from "redux-thunk";
-import meReducer from "@/store/slicers/me.slicer";
-import pusherReducer from "@/store/slicers/pusher.slicer";
-import campaginReducer from "@/store/slicers/campaign.slicer";
 import { PERSIST, PURGE,REHYDRATE } from "redux-persist/es/constants";
 import {
   createStateSyncMiddleware,
@@ -20,18 +16,15 @@ const persistConfig = {
 };
 
 const reducers = combineReducers({
-  sidebar: sidebarReducer,
+//   sidebar: sidebarReducer,
   auth: authReducer,
-  me: meReducer,
-  googlemap: googleReducer,
-  campaign: campaginReducer,
-  pusher: pusherReducer,
+
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 const reduxStateSyncConfig = {
-  predicate: (action) => {
+  predicate: (action: { type: any; }) => {
     const blacklist = [PERSIST, PURGE, REHYDRATE];
     if (typeof action !== "function") {
       if (Array.isArray(blacklist)) {
