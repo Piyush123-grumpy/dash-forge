@@ -1,9 +1,8 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore, Middleware } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 // import sidebarReducer from "./slicer/sidebar.slicer";
 import authReducer from "./slicers/auth.slicer";
-import thunk from "redux-thunk";
 import { PERSIST, PURGE,REHYDRATE } from "redux-persist/es/constants";
 import {
   createStateSyncMiddleware,
@@ -11,7 +10,7 @@ import {
 } from "redux-state-sync";
 
 const persistConfig = {
-  key: "promt",
+  key: "Service-management",
   storage,
 };
 
@@ -34,11 +33,18 @@ const reduxStateSyncConfig = {
     return false;
   },
 };
-const stateSyncMiddleware = createStateSyncMiddleware(reduxStateSyncConfig);
-// const stateSyncMiddleware = createStateSyncMiddleware({});
+
+const stateSyncMiddleware = createStateSyncMiddleware(reduxStateSyncConfig) as Middleware< // 👈 fix here
+  {}, 
+  ReturnType<typeof persistedReducer>
+>;
+
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: [thunk, stateSyncMiddleware],
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // still recommended with redux-persist
+    }).concat(stateSyncMiddleware), // ✅ type-safe now
 });
 
 initMessageListener(store);

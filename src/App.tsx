@@ -1,12 +1,8 @@
-import { useState } from "react";
+
+import MainLayout from "./layout/MainLayout";
 
 function App() {
-  return (
-    <>
-      <div>Swag</div>
-      <div className="text-red-300">i wanan dance dance dance fantastic baby</div>
-    </>
-  );
+   return <MainLayout />;
 }
 
 export default App;
